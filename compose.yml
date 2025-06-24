@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: vevor_weather
+      POSTGRES_USER: vevor
+      POSTGRES_PASSWORD: vevorpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    env_file: 
+      - .env
+    ports:
+      - "5400:5400"
+    depends_on:
+      - db
+
+volumes:
+  pgdata: 
