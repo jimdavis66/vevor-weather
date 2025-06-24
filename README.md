@@ -23,7 +23,7 @@ This is a lightweight Python web application that acts as a proxy between a Vevo
 4. Set environment variables (see below)
 5. Run the app:
    ```bash
-   flask run --app app
+   python -m app
    ```
 
 ## Environment Variables
@@ -31,6 +31,7 @@ This is a lightweight Python web application that acts as a proxy between a Vevo
 - `DATABASE_URL`: PostgreSQL connection string eg. `postgresql+psycopg2://user:pass@host:5432/vevor_weather`
 - `SECRET_KEY`: Flask secret key
 - `ALLOWED_IPS`: (Optional) Comma-separated list of allowed IPs
+- `LOG_LEVEL` : (Optional) DEBUG, INFO, WARNING, ERROR, or CRITICAL
 
 ## Docker
 To build and run with Docker:

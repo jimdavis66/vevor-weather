@@ -31,8 +31,9 @@ def create_app():
 
     db.init_app(app)
 
-    # Basic logging to stdout
-    logging.basicConfig(level=logging.INFO)
+    # Set logging level
+    log_level = os.getenv('LOG_LEVEL', 'INFO').upper()
+    logging.basicConfig(level=getattr(logging, log_level, logging.INFO))
 
     test_db_connection_and_table(app)
 
