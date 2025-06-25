@@ -39,13 +39,11 @@ def update_weatherstation():
             station_id=params.get('ID'),
             timestamp_utc=parse_date(params.get('dateutc')),
             temperature_f=safe_float(params.get('tempf')),
-            temperature_c=safe_float(params.get('tempc')),
             humidity=safe_int(params.get('humidity')),
             pressure_in=safe_float(params.get('baromin')),
             dewpoint_f=safe_float(params.get('dewptf')),
-            dewpoint_c=safe_float(params.get('dewptc')),
             windspeed_mph=safe_float(params.get('windspeedmph')),
-            windspeed_kmph=to_kmph(params.get('windspeedmph')),
+            windgust_mph=safe_float(params.get('windgustmph')),
             winddir_deg=safe_int(params.get('winddir')),
             rainfall_in=safe_float(params.get('rainin')),
             uv=safe_int(params.get('UV')),
@@ -78,12 +76,6 @@ def safe_float(val):
 def safe_int(val):
     try:
         return int(val) if val is not None else None
-    except Exception:
-        return None
-
-def to_kmph(mph):
-    try:
-        return float(mph) * 1.60934 if mph is not None else None
     except Exception:
         return None
 
