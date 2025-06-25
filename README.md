@@ -61,7 +61,9 @@ CREATE TABLE vevor_weather_data (
     winddir_deg INTEGER,
     rainfall_in REAL,
     uv INTEGER,
-    solarRadiation REAL,
+    solar_radiation REAL,
     received_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+GRANT ALL ON vevor_weather_data TO vevor;
+GRANT ALL ON SCHEMA public TO vevor;
 ```
