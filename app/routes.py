@@ -47,7 +47,7 @@ def update_weatherstation():
             winddir_deg=safe_int(params.get('winddir')),
             rainfall_in=safe_float(params.get('rainin')),
             uv=safe_int(params.get('UV')),
-            solarradiation=safe_float(params.get('solarRadiation')),
+            solar_radiation=safe_float(params.get('solarRadiation')),
         )
         db.session.add(data)
         db.session.commit()

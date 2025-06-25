@@ -16,7 +16,7 @@ class VevorWeatherData(db.Model):
     winddir_deg = db.Column(db.Integer)
     rainfall_in = db.Column(db.Float)
     uv = db.Column(db.Integer)
-    solarradiation = db.Column(db.Float)
+    solar_radiation = db.Column(db.Float)
     received_at = db.Column(db.DateTime, server_default=func.now())
 
     def __repr__(self):
