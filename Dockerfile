@@ -1,19 +1,22 @@
-FROM python:3.13-slim-bookworm
-
-# Create a non-root user
-RUN useradd -m -u 1000 appuser
+# syntax=docker/dockerfile:1
+FROM cgr.dev/chainguard/python:latest-dev AS builder
 
 WORKDIR /app
 
 COPY requirements.txt ./
+RUN python -m venv /app/venv
+ENV PATH="/app/venv/bin:$PATH"
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app ./app
 
-# Set ownership to non-root user
-RUN chown -R appuser:appuser /app
+FROM cgr.dev/chainguard/python:latest
 
-# Switch to non-root user
-USER appuser
+WORKDIR /app
+
+COPY --from=builder /app/venv /app/venv
+COPY app ./app
+
+ENV PATH="/app/venv/bin:$PATH"
 
 CMD ["python", "-m", "app"] 

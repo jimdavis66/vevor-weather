@@ -66,4 +66,5 @@ CREATE TABLE vevor_weather_data (
 );
 GRANT ALL ON vevor_weather_data TO vevor;
 GRANT ALL ON SCHEMA public TO vevor;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO vevor;
 ```
