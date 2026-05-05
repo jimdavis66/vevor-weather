@@ -4,10 +4,29 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import inspect, text
 from dotenv import load_dotenv
 import logging
+import re
 
 load_dotenv()
 
 db = SQLAlchemy()
+
+PASSWORD_QUERY_PARAM_RE = re.compile(r'(?i)(\bpassword=)[^&\s"]+')
+
+
+def redact_passwords(value):
+    if isinstance(value, str):
+        return PASSWORD_QUERY_PARAM_RE.sub(r'\1[REDACTED]', value)
+    return value
+
+
+class RedactPasswordLogFilter(logging.Filter):
+    def filter(self, record):
+        record.msg = redact_passwords(record.msg)
+        if isinstance(record.args, tuple):
+            record.args = tuple(redact_passwords(arg) for arg in record.args)
+        elif isinstance(record.args, dict):
+            record.args = {k: redact_passwords(v) for k, v in record.args.items()}
+        return True
 
 def test_db_connection_and_table(app):
     with app.app_context():
@@ -34,6 +53,7 @@ def create_app():
     # Set logging level
     log_level = os.getenv('LOG_LEVEL', 'INFO').upper()
     logging.basicConfig(level=getattr(logging, log_level, logging.INFO))
+    logging.getLogger('werkzeug').addFilter(RedactPasswordLogFilter())
 
     test_db_connection_and_table(app)
 

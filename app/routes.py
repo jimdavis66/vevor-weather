@@ -25,7 +25,11 @@ def update_weatherstation():
             return jsonify({'error': 'Forbidden'}), 403
 
     params = request.args.to_dict()
-    logging.info(f"Received params: {params}")
+    redacted_params = {
+        key: ('[REDACTED]' if key.upper() == 'PASSWORD' else value)
+        for key, value in params.items()
+    }
+    logging.info(f"Received params: {redacted_params}")
 
     # Required fields
     required_fields = ['ID', 'dateutc']
