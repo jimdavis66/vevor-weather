@@ -19,4 +19,5 @@ COPY app ./app
 
 ENV PATH="/app/venv/bin:$PATH"
 
-CMD ["python", "-m", "app"] 
+ENTRYPOINT ["/app/venv/bin/python"]
+CMD ["-m", "app"]
