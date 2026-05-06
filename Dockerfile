@@ -20,4 +20,4 @@ COPY app ./app
 ENV PATH="/app/venv/bin:$PATH"
 
 ENTRYPOINT ["/app/venv/bin/python"]
-CMD ["-m", "app"]
+CMD ["-m", "app.gunicorn_entrypoint"]

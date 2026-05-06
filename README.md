@@ -40,6 +40,11 @@ docker build -t vevor-weather .
 docker run --env-file .env vevor-weather
 ```
 
+### Why `app/gunicorn_entrypoint.py` exists
+This image is built on a minimal Python base that **does not include a shell** (no `sh`). That means we can’t reliably use a shell-form `CMD` like `sh -c "gunicorn ..."` to expand environment variables.
+
+Instead, `app/gunicorn_entrypoint.py` reads runtime settings from environment variables (like `PORT`, worker/thread counts, timeouts) and then `exec()`s `gunicorn` directly, which is more robust in minimal containers and keeps configuration env-driven.
+
 ## API
 - **GET** `/weatherstation/updateweatherstation.php` — Accepts weather data as query parameters
 
