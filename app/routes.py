@@ -1,9 +1,9 @@
 import os
 import logging
-from flask import Blueprint, request, jsonify, Response, current_app
+from flask import Blueprint, request, jsonify, Response
 from sqlalchemy.exc import SQLAlchemyError
 import requests
-from datetime import datetime
+from datetime import datetime, timezone
 from . import db
 from .models import VevorWeatherData
 
@@ -87,7 +87,9 @@ def parse_date(date_str):
     try:
         # Handles 'now' or UTC string
         if date_str == 'now':
-            return datetime.utcnow()
-        return datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
+            return datetime.now(timezone.utc)
+        return datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S').replace(
+            tzinfo=timezone.utc
+        )
     except Exception:
         return None 

@@ -1,6 +1,4 @@
 import os
-import sys
-
 
 def _env_int(name: str, default: int) -> int:
     try:

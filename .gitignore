@@ -59,6 +59,9 @@ Thumbs.db
 *.db
 *.sqlite3
 
+# Ruff
+.ruff_cache/
+
 # Coverage
 coverage/
 htmlcov/
