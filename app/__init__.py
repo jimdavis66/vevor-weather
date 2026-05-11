@@ -42,20 +42,24 @@ def test_db_connection_and_table(app):
             print(f'Database check failed: {e}')
             raise
 
-def create_app():
+def create_app(test_config=None):
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE')
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev')
+    app.config.from_mapping(
+        SECRET_KEY=os.getenv('SECRET_KEY', 'dev'),
+        SQLALCHEMY_DATABASE_URI=os.getenv('DATABASE'),
+        SQLALCHEMY_TRACK_MODIFICATIONS=False,
+    )
+    if test_config:
+        app.config.update(test_config)
 
     db.init_app(app)
 
-    # Set logging level
     log_level = os.getenv('LOG_LEVEL', 'INFO').upper()
     logging.basicConfig(level=getattr(logging, log_level, logging.INFO))
     logging.getLogger('werkzeug').addFilter(RedactPasswordLogFilter())
 
-    test_db_connection_and_table(app)
+    if not app.config.get('TESTING'):
+        test_db_connection_and_table(app)
 
     from . import routes
     app.register_blueprint(routes.bp)

@@ -1,4 +1,3 @@
-import os
 import logging
 from flask import Blueprint, request, jsonify, Response
 from sqlalchemy.exc import SQLAlchemyError
@@ -9,21 +8,9 @@ from .models import VevorWeatherData
 
 bp = Blueprint('main', __name__)
 
-ALLOWED_IPS = os.getenv('ALLOWED_IPS')
-if ALLOWED_IPS:
-    ALLOWED_IPS = [ip.strip() for ip in ALLOWED_IPS.split(',')]
-else:
-    ALLOWED_IPS = None
 
 @bp.route('/weatherstation/updateweatherstation.php', methods=['GET'])
 def update_weatherstation():
-    # IP allowlist check
-    if ALLOWED_IPS:
-        remote_ip = request.remote_addr
-        if remote_ip not in ALLOWED_IPS:
-            logging.warning(f"Blocked request from IP: {remote_ip}")
-            return jsonify({'error': 'Forbidden'}), 403
-
     params = request.args.to_dict()
     redacted_params = {
         key: ('[REDACTED]' if key.upper() == 'PASSWORD' else value)

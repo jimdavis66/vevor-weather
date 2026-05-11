@@ -3,7 +3,7 @@ FROM dhi.io/python:3.14-dev@sha256:b4b5ea6a19c0d92dd737ba2dacb92bc0c2650b771f588
 
 WORKDIR /app
 
-COPY requirements.txt ./
+COPY requirements/requirements.txt ./
 RUN python -m venv /app/venv
 ENV PATH="/app/venv/bin:$PATH"
 RUN pip install --no-cache-dir -r requirements.txt
