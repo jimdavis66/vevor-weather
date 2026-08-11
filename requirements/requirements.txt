@@ -4,4 +4,4 @@ Flask-SQLAlchemy>=3.1.1
 psycopg2-binary>=2.9.12
 python-dotenv>=1.2.2
 requests>=2.33.1
-gunicorn>=23.0.0
+gunicorn>=26.0.0
