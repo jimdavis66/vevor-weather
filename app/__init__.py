@@ -1,10 +1,11 @@
+import logging
 import os
+import re
+
+from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import inspect, text
-from dotenv import load_dotenv
-import logging
-import re
 
 load_dotenv()
 
@@ -28,19 +29,21 @@ class RedactPasswordLogFilter(logging.Filter):
             record.args = {k: redact_passwords(v) for k, v in record.args.items()}
         return True
 
+
+class DatabaseSchemaError(RuntimeError):
+    """Raised when the configured database does not have the required schema."""
+
+
 def test_db_connection_and_table(app):
     with app.app_context():
-        try:
-            # Test connection
-            db.session.execute(text('SELECT 1'))
-            # Check table exists
-            inspector = inspect(db.engine)
-            if 'vevor_weather_data' not in inspector.get_table_names():
-                raise Exception('Table vevor_weather_data does not exist!')
-            print('Database connection and table check: OK')
-        except Exception as e:
-            print(f'Database check failed: {e}')
-            raise
+        # Test connection
+        db.session.execute(text("SELECT 1"))
+        # Check table exists
+        inspector = inspect(db.engine)
+        if "vevor_weather_data" not in inspector.get_table_names():
+            raise DatabaseSchemaError("Table vevor_weather_data does not exist")
+        print("Database connection and table check: OK")
+
 
 def create_app(test_config=None):
     app = Flask(__name__)
@@ -62,6 +65,7 @@ def create_app(test_config=None):
         test_db_connection_and_table(app)
 
     from . import routes
+
     app.register_blueprint(routes.bp)
 
-    return app 
+    return app

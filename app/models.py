@@ -1,5 +1,7 @@
-from . import db
 from sqlalchemy import func
+
+from . import db
+
 
 class VevorWeatherData(db.Model):
     __tablename__ = 'vevor_weather_data'
@@ -20,4 +22,7 @@ class VevorWeatherData(db.Model):
     received_at = db.Column(db.DateTime, server_default=func.now())
 
     def __repr__(self):
-        return f'<VevorWeatherData id={self.id} station_id={self.station_id} timestamp_utc={self.timestamp_utc}>' 
+        return (
+            f"<VevorWeatherData id={self.id} station_id={self.station_id} "
+            f"timestamp_utc={self.timestamp_utc}>"
+        )

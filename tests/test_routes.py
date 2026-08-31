@@ -1,5 +1,7 @@
 from unittest.mock import MagicMock
 
+import requests
+
 
 def test_missing_required_field_returns_400(client):
     r = client.get("/weatherstation/updateweatherstation.php?ID=ST1")
@@ -22,7 +24,7 @@ def test_forwards_wu_response_status_and_body(client, mocker):
 
 def test_forward_failure_returns_502(client, mocker):
     mock_get = mocker.patch("app.routes.requests.get")
-    mock_get.side_effect = OSError("network down")
+    mock_get.side_effect = requests.RequestException("network down")
 
     r = client.get("/weatherstation/updateweatherstation.php?ID=S&dateutc=now")
 
@@ -46,8 +48,8 @@ def test_station_row_persisted_after_success(client, app, mocker):
     with app.app_context():
         from sqlalchemy import select
 
-        from app.models import VevorWeatherData
         from app import db
+        from app.models import VevorWeatherData
 
         rows = db.session.scalars(select(VevorWeatherData)).all()
         assert len(rows) == 1

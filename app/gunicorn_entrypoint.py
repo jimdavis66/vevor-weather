@@ -1,9 +1,10 @@
 import os
 
+
 def _env_int(name: str, default: int) -> int:
     try:
         return int(os.getenv(name, str(default)))
-    except Exception:
+    except ValueError:
         return default
 
 
