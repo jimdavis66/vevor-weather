@@ -46,10 +46,9 @@ def test_station_row_persisted_after_success(client, app, mocker):
     )
 
     with app.app_context():
-        from sqlalchemy import select
-
         from app import db
         from app.models import VevorWeatherData
+        from sqlalchemy import select
 
         rows = db.session.scalars(select(VevorWeatherData)).all()
         assert len(rows) == 1

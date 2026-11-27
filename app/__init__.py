@@ -16,7 +16,7 @@ PASSWORD_QUERY_PARAM_RE = re.compile(r'(?i)(\bpassword=)[^&\s"]+')
 
 def redact_passwords(value):
     if isinstance(value, str):
-        return PASSWORD_QUERY_PARAM_RE.sub(r'\1[REDACTED]', value)
+        return PASSWORD_QUERY_PARAM_RE.sub(r"\1[REDACTED]", value)
     return value
 
 
@@ -48,8 +48,8 @@ def test_db_connection_and_table(app):
 def create_app(test_config=None):
     app = Flask(__name__)
     app.config.from_mapping(
-        SECRET_KEY=os.getenv('SECRET_KEY', 'dev'),
-        SQLALCHEMY_DATABASE_URI=os.getenv('DATABASE'),
+        SECRET_KEY=os.getenv("SECRET_KEY", "dev"),
+        SQLALCHEMY_DATABASE_URI=os.getenv("DATABASE"),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
     )
     if test_config:
@@ -57,11 +57,11 @@ def create_app(test_config=None):
 
     db.init_app(app)
 
-    log_level = os.getenv('LOG_LEVEL', 'INFO').upper()
+    log_level = os.getenv("LOG_LEVEL", "INFO").upper()
     logging.basicConfig(level=getattr(logging, log_level, logging.INFO))
-    logging.getLogger('werkzeug').addFilter(RedactPasswordLogFilter())
+    logging.getLogger("werkzeug").addFilter(RedactPasswordLogFilter())
 
-    if not app.config.get('TESTING'):
+    if not app.config.get("TESTING"):
         test_db_connection_and_table(app)
 
     from . import routes

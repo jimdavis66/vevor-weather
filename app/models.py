@@ -4,7 +4,7 @@ from . import db
 
 
 class VevorWeatherData(db.Model):
-    __tablename__ = 'vevor_weather_data'
+    __tablename__ = "vevor_weather_data"
 
     id = db.Column(db.Integer, primary_key=True)
     station_id = db.Column(db.String)

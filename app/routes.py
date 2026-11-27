@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import requests
 from flask import Blueprint, Response, jsonify, request
@@ -16,8 +16,7 @@ logger = logging.getLogger(__name__)
 def update_weatherstation():
     params = request.args.to_dict()
     redacted_params = {
-        key: ("[REDACTED]" if key.upper() == "PASSWORD" else value)
-        for key, value in params.items()
+        key: ("[REDACTED]" if key.upper() == "PASSWORD" else value) for key, value in params.items()
     }
     logger.info("Received params: %s", redacted_params)
 
@@ -51,10 +50,7 @@ def update_weatherstation():
 
     # Forward the request
     try:
-        forward_url = (
-            "http://rtupdate.wunderground.com/weatherstation/"
-            "updateweatherstation.php"
-        )
+        forward_url = "http://rtupdate.wunderground.com/weatherstation/updateweatherstation.php"
         resp = requests.get(forward_url, params=request.args, timeout=5)
         logger.info("Forwarded to WU, status: %s", resp.status_code)
         return Response(
@@ -70,14 +66,14 @@ def update_weatherstation():
 def safe_float(val):
     try:
         return float(val) if val is not None else None
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         return None
 
 
 def safe_int(val):
     try:
         return int(val) if val is not None else None
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         return None
 
 
@@ -85,9 +81,7 @@ def parse_date(date_str):
     try:
         # Handles 'now' or UTC string
         if date_str == "now":
-            return datetime.now(timezone.utc)
-        return datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S").replace(
-            tzinfo=timezone.utc
-        )
-    except (TypeError, ValueError):
+            return datetime.now(UTC)
+        return datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S").replace(tzinfo=UTC)
+    except TypeError, ValueError:
         return None

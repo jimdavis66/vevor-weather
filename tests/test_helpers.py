@@ -1,7 +1,6 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
-
 from app import redact_passwords
 from app.routes import parse_date, safe_float, safe_int
 
@@ -37,12 +36,12 @@ def test_safe_int(value, expected):
 def test_parse_date_now():
     result = parse_date("now")
     assert isinstance(result, datetime)
-    assert result.tzinfo == timezone.utc
+    assert result.tzinfo == UTC
 
 
 def test_parse_date_iso_utc_string():
     result = parse_date("2024-01-15 12:30:45")
-    assert result == datetime(2024, 1, 15, 12, 30, 45, tzinfo=timezone.utc)
+    assert result == datetime(2024, 1, 15, 12, 30, 45, tzinfo=UTC)
 
 
 def test_parse_date_invalid():
